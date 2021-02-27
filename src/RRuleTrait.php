@@ -84,10 +84,10 @@ trait RRuleTrait
 		$res = array();
 		$n = 0;
 		foreach ($iterator as $occurrence) {
-			if ($begin !== null && $occurrence < $begin) {
+			if ($begin !== null && $this->isOccurenceBeforeDate($occurrence, $begin)) {
 				continue;
 			}
-			if ($end !== null && $occurrence > $end) {
+			if ($end !== null && $this->isOccurenceAfterDate($occurrence, $end)) {
 				break;
 			}
 			$res[] = clone $occurrence;
@@ -230,5 +230,20 @@ trait RRuleTrait
         }
 
         return $occurrence > $date;
+    }
+
+    /**
+     * @param $occurrence
+     * @param $date
+     * @param false $inclusive
+     * @return bool
+     */
+    protected function isOccurenceBeforeDate($occurrence, $date, $inclusive = false)
+    {
+        if ($inclusive) {
+            return $occurrence <= $date;
+        }
+
+        return $occurrence < $date;
     }
 }
