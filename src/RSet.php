@@ -635,7 +635,7 @@ class RSet implements RRuleInterface
 			$occurrence = $this->rlist_heap->top();
 			$this->rlist_heap->extract(); // remove the occurrence from the heap
 
-			if ($occurrence == $previous_occurrence) {
+			if ($this->isOccurenceMatchesDate($occurrence, $previous_occurrence)) {
 				continue; // skip, was already considered
 			}
 
@@ -657,11 +657,11 @@ class RSet implements RRuleInterface
 				}
 
 				$exdate = $this->exlist_heap->top();
-				if ($exdate < $occurrence) {
+				if ($this->isOccurenceAfterDate($occurrence, $exdate)) {
 					$this->exlist_heap->extract();
 					continue;
 				}
-				elseif ($exdate == $occurrence) {
+				elseif ($this->isOccurenceMatchesDate($occurrence, $exdate)) {
 					$excluded = true;
 					break 1;
 				}

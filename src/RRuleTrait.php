@@ -206,4 +206,29 @@ trait RRuleTrait
 		}
 		return $date;
 	}
+
+    /**
+     * @param $occurrence
+     * @param $date
+     * @return bool
+     */
+    protected function isOccurenceMatchesDate($occurrence, $date)
+    {
+        return $occurrence == $date;
+    }
+
+    /**
+     * @param $occurrence
+     * @param $date
+     * @param false $inclusive
+     * @return bool
+     */
+    protected function isOccurenceAfterDate($occurrence, $date, $inclusive = false)
+    {
+        if ($inclusive) {
+            return $occurrence >= $date;
+        }
+
+        return $occurrence > $date;
+    }
 }

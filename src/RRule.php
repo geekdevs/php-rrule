@@ -899,10 +899,10 @@ class RRule implements RRuleInterface
 
 		// so... as a fallback we have to loop
 		foreach ($this as $occurrence) {
-			if ($occurrence == $date) {
+			if ($this->isOccurenceMatchesDate($occurrence, $date)) {
 				return true; // lucky you!
 			}
-			if ($occurrence > $date) {
+			if ($this->isOccurenceAfterDate($occurrence, $date)) {
 				break;
 			}
 		}
@@ -1521,13 +1521,13 @@ class RRule implements RRuleInterface
 				// while ( ($occurrence = current($dayset)) !== false ) {
 				foreach ($dayset as $occurrence) {
 					// consider end conditions
-					if ($this->until && $occurrence > $this->until) {
+					if ($this->until && $this->isOccurenceAfterDate($occurrence, $this->until)) {
 						$this->total = $total; // save total for count() cache
 						return;
 					}
 
 					// next($dayset);
-					if ($occurrence >= $dtstart) { // ignore occurrences before DTSTART
+					if ($this->isOccurenceAfterDate($occurrence, $dtstart, true)) { // ignore occurrences before DTSTART
 						if ($this->count && $total >= $this->count) {
 							$this->total = $total;
 							return;
@@ -1552,13 +1552,13 @@ class RRule implements RRuleInterface
 					foreach ($timeset as $time) {
 						$occurrence->setTime($time[0], $time[1], $time[2]);
 						// consider end conditions
-						if ($this->until && $occurrence > $this->until) {
+						if ($this->until && $this->isOccurenceAfterDate($occurrence, $this->until)) {
 							$this->total = $total; // save total for count() cache
 							return;
 						}
 
 						// next($timeset);
-						if ($occurrence >= $dtstart) { // ignore occurrences before DTSTART
+						if ($this->isOccurenceAfterDate($occurrence, $dtstart, true)) { // ignore occurrences before DTSTART
 							if ($this->count && $total >= $this->count) {
 								$this->total = $total;
 								return;
