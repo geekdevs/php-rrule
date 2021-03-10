@@ -657,11 +657,15 @@ class RSet implements RRuleInterface
 				}
 
 				$exdate = $this->exlist_heap->top();
-				if ($this->isOccurenceAfterDate($occurrence, $exdate)) {
+
+                $occurrenceDate = (clone $occurrence->getStartsAt())->setTime(0, 0);
+                $exclusionDate = (clone $exdate)->setTime(0, 0);
+
+				if ($occurrenceDate > $exclusionDate) {
 					$this->exlist_heap->extract();
 					continue;
 				}
-				elseif ($this->isOccurenceMatchesDate($occurrence, $exdate)) {
+				elseif ($occurrenceDate == $exclusionDate) {
 					$excluded = true;
 					break 1;
 				}
